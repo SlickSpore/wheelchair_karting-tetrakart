@@ -147,7 +147,7 @@ class DEBUG_run:
             time.sleep(k_cfg.WRITING_SPEED)
 
     def get_direction_and_speed(self, js_angle, death_zone):
-        velocity = abs(int(js_angle/100*k_cfg.MOTOR_MAXANGLE))
+        velocity = abs(int((js_angle-death_zone)/(100-death_zone)*k_cfg.MOTOR_MAXANGLE))
         return k_cfg.MOTOR_LEFT if js_angle < 0 else k_cfg.MOTOR_RIGHT, 0 if abs(js_angle) < death_zone else velocity
 
     def start(self):
