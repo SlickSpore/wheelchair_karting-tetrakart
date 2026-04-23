@@ -31,3 +31,9 @@ function stop() {
     running = false;
     bar.textContent = "Kart Stopped!"
 }
+
+function shutdown() {
+    bar.textContent = "Shutting Down!";
+    fetch('/core_shutdown',  {method:'POST'})
+    statusLoop();
+}

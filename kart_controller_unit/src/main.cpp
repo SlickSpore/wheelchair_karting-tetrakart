@@ -9,6 +9,10 @@
 #define DIR_PIN 3
 #define PWM_PIN 9
 
+#define STOP_PIN 7
+
+#define set_steer_direction_d(a, b) PORTD = b ? (PORTD | (b<<(a))) : (PORTD & (b<<(a)))
+
 uint8_t buffer[PACKET_SIZE];
 
 struct
@@ -33,8 +37,9 @@ void setup(){
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(DIR_PIN, OUTPUT);
+  pinMode(STOP_PIN, INPUT_PULLUP);
 
-  digitalWrite(DIR_PIN, LOW);
+  set_steer_direction_d(DIR_PIN, LOW);
   analogWrite(PWM_PIN, 0);
 
   while (!Serial.available());
@@ -82,7 +87,8 @@ void loop() {
     };
 
     analogWrite(PWM_PIN, steering_data.velocity);
-    digitalWrite(DIR_PIN, steering_data.direction);
+
+    set_steer_direction_d(DIR_PIN, steering_data.direction);
 
     Serial.write((uint8_t *)&core_responce, sizeof(core_responce));
     serial_flush();

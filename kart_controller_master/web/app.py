@@ -1,21 +1,38 @@
 from flask import render_template, Flask, jsonify
-import subprocess, threading
+import subprocess, threading, enum
 
 """
     Written By Ettore Caccioli 17/04/2026
     © Wheelchair Karting
 """
 
+class StatusCodes(enum.Enum):
+    JOYSTICK_HAS_FAILED = 255 
+    SERIAL_HAS_FAILED = 255 
+    CORE_IDLE = 0
+    CORE_RUNNING = 1
+    CORE_ALREADY_RUNNING = 2
+    CORE_SHUTDOWN = 0xAA 
+
 app = Flask(__name__)
 
 runner = None
 thread = None
-error_code = 0
+core_status = StatusCodes.CORE_IDLE
 
-def check_status(): 
-    global error_code
-    runner.communicate()
-    error_code = runner.returncode
+
+def check_core_failure(): 
+    global core_status
+    if runner:
+        runner.communicate()
+        match(runner.returncode):
+            case StatusCodes.JOYSTICK_HAS_FAILED.value:
+                core_status = StatusCodes.JOYSTICK_HAS_FAILED
+            case StatusCodes.SERIAL_HAS_FAILED.value:
+                core_status = StatusCodes.JOYSTICK_HAS_FAILED
+            case _:
+                core_status = StatusCodes.CORE_RUNNING
+
 
 @app.route("/")
 def home():
@@ -23,14 +40,14 @@ def home():
 
 @app.route("/core_start", methods=["POST"])
 def core_start():
-    global runner, error_code, thread
+    global runner, core_status, thread
     print("starting go kart")
 
     if runner and runner.poll() is None:
+        core_status = StatusCodes.CORE_ALREADY_RUNNING
         return jsonify(
             {
-                "kart_status"   :"error",
-                "web_message"    :"Kart Already Running!"
+                "kart_signal": "error"
             }
         )
 
@@ -40,8 +57,10 @@ def core_start():
         text=True
     )
 
-    thread = threading.Thread(target=check_status, daemon=True)
+    thread = threading.Thread(target=check_core_failure, daemon=True)
     thread.start()
+
+    core_status = StatusCodes.CORE_RUNNING
 
     return jsonify(
         {
@@ -51,40 +70,80 @@ def core_start():
 
 @app.route('/status')
 def status():
-    match (error_code):
-        case 255:
+    print(core_status)
+    match (core_status):
+        case StatusCodes.JOYSTICK_HAS_FAILED:
             return jsonify(
                 {
                 "kart_status"   :"error",
                 "web_message"    :"Joystick Error! Check Connections."
                 }
             )
-        case 254:
+        case StatusCodes.SERIAL_HAS_FAILED:
             return jsonify(
                 {
                 "kart_status"   :"error",
                 "web_message"    :"Serial Error! Check Connections."
                 }
             )
-        case _:
+        case StatusCodes.CORE_RUNNING:
             return jsonify(
                 {
-                    "kart_status":  "sig_start",
+                    "kart_status":  "sig_started",
                     "web_message":   "Running!"
+                }
+            )
+        case StatusCodes.CORE_SHUTDOWN:
+            return jsonify(
+                {
+                    "kart_status":  "sig_shutdown",
+                    "web_message":   "Shutting Down!"
+                }
+            )
+        case StatusCodes.CORE_ALREADY_RUNNING:
+            return jsonify(
+                {
+                    "kart_status"   :"error",
+                    "web_message"    :"Kart Already Running!"
+                }
+            )
+        case StatusCodes.CORE_IDLE:
+            return jsonify(
+                {
+                    "kart_status":  "sig_ready",
+                    "web_message":   "Checking Readiness..."
                 }
             )
 
 @app.route("/core_stop", methods=["POST"])
 def core_stop():
+    global core_status
     print("stopping go kart")
+    
     runner.terminate()
     runner.wait()
     thread.join()
+
+    core_status = StatusCodes.CORE_IDLE
     return jsonify(
         {
             "kart_signal": "sig_stop"
         }
     )
+
+@app.route("/core_shutdown", methods=["POST"])
+def core_shutdown():
+    global core_status
+    core_status = StatusCodes.CORE_SHUTDOWN
+    process = subprocess.Popen(["shutdown", "now"])
+    stdin, stderr = process.communicate()
+
+    return jsonify (
+        {
+           "kart_status":"sig_poweroff"
+        }
+    )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)
