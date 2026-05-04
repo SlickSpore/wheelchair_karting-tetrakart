@@ -3,6 +3,7 @@
 <html>
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>DeltaKart Web Controller</title>
         <link rel="icon" href="{{url_for('static', filename='favicon.jpg')}}" type="image/x-icon" class="favicon">
     </head>
@@ -12,7 +13,10 @@
         <div class="container">
         <button class="start_button" onclick=start()>Start Driving</button>
         <button class="stop_button" onclick=stop()>Stop Kart</button>
-        <button class="stop_button" onclick=shutdown()>System Quit</button>
+        <a href="{{ url_for('kart_config') }}">
+            <button class="edit_button" onclick="submit">Configure</button>
+        </a>
+        <button class="quit_button" onclick=shutdown()>System Quit</button>
         </div>
 
         <script src="{{url_for('static', filename='script.js')}}"></script>

@@ -51,7 +51,7 @@ def terminal_log(x, end='\n'):
     if k_cfg.VERBOSE: print(f"{datetime.datetime.now()}: {x}", end=end)
 
 
-class DEBUG_run:
+class JOYSTICK_RUN:
     def attach_arduino(self):
         try:
             self.arduino = serial.Serial(
@@ -142,8 +142,6 @@ class DEBUG_run:
 
             terminal_log(f"{packet.hex().strip()} -> {'OK!' if self.is_valid(responce) else 'FAILURE!'}")
 
-            #self.try_reconnection(responce)
-
             time.sleep(k_cfg.WRITING_SPEED)
 
     def get_direction_and_speed(self, js_angle, death_zone):
@@ -172,7 +170,16 @@ class DEBUG_run:
             self.worker.join()
             self.arduino.close()
 
+class HEADSET_RUN:
+    def __init__(self):
+        pass
+
 if __name__ == "__main__":
-    debug = DEBUG_run()
-    signal.signal(signal.SIGTERM, handler)
-    debug.start()
+    print(k_cfg.CORE_MODE)
+    match k_cfg.CORE_MODE:
+        case CoreModes.JOYSTICK:
+            debug = JOYSTICK_RUN()
+            signal.signal(signal.SIGTERM, handler)
+            debug.start()
+        case CoreModes.HEADSET:
+            print("Ops, it's a bit too early to use this...")

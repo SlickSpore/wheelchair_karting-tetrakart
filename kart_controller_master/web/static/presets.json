@@ -1,0 +1,32 @@
+{
+    "preset_1":{
+        "visible_name":"Default Mode",
+        "args": [
+            "--js_axes=3,3,3"
+        ]
+    },
+    "preset_2":{
+        "visible_name":"Test Mode",
+        "args": [
+            "--js_axes=1,1,1"
+        ]
+    },
+    "preset_3":{
+        "visible_name":"Unused",
+        "args": [
+            
+        ]
+    },
+    "preset_4":{
+        "visible_name":"Unused",
+        "args": [
+            
+        ]
+    },
+    "preset_5":{
+        "visible_name":"Unused",
+        "args": [
+            
+        ]
+    }
+}

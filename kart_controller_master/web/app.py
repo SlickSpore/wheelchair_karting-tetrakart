@@ -1,5 +1,5 @@
 from flask import render_template, Flask, jsonify
-import subprocess, threading, enum
+import subprocess, threading, enum, json
 
 """
     Written By Ettore Caccioli 17/04/2026
@@ -20,6 +20,7 @@ runner = None
 thread = None
 core_status = StatusCodes.CORE_IDLE
 
+core_presets = None
 
 def check_core_failure(): 
     global core_status
@@ -36,6 +37,9 @@ def check_core_failure():
 
 @app.route("/")
 def home():
+    return render_template("index.html")
+@app.route("/index")
+def index():
     return render_template("index.html")
 
 @app.route("/core_start", methods=["POST"])
@@ -67,6 +71,17 @@ def core_start():
             "kart_signal": "sig_start"
         }
     )
+
+@app.route('/config')
+def kart_config():
+    return render_template("config.html")
+
+@app.route('/preset_names')
+def preset_names():
+    global core_presets
+    with open("web/static/presets.json", "r") as jsf:
+        core_presets = json.load(jsf)
+    return jsonify(core_presets)
 
 @app.route('/status')
 def status():
@@ -114,6 +129,31 @@ def status():
                     "web_message":   "Checking Readiness..."
                 }
             )
+
+def core_config(args):
+    subprocess.Popen((["python3", "core/config/kart_config.py"] + args))
+
+@app.route('/preset_1')
+def preset_1():
+    core_config(core_presets["preset_1"]["args"])
+    return jsonify({"core_preset_mode":"preset_1"})
+
+@app.route('/preset_2')
+def preset_2():
+    core_config(core_presets["preset_2"]["args"])
+    return jsonify({"core_preset_mode":"preset_2"})
+
+@app.route('/preset_3')
+def preset_3():
+    return jsonify({"core_preset_mode":"preset_3"})
+
+@app.route('/preset_4')
+def preset_4():
+    return jsonify({"core_preset_mode":"preset_4"})
+
+@app.route('/preset_5')
+def preset_5():
+    return jsonify({"core_preset_mode":"preset_5"})
 
 @app.route("/core_stop", methods=["POST"])
 def core_stop():

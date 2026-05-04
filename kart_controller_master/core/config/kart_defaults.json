@@ -18,5 +18,6 @@
   "js_dtzn": 10,
   "verbose": false,
   "motor_maxangle": 255,
-  "generate_defaults": 0
+  "generate_defaults": 0,
+  "core_mode": "joystick"
 }

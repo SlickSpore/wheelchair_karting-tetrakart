@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Written By Ettore Caccioli, 29/04/2026 © Wheelchair Karting -->
+<html>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DeltaKart Web Controller</title>
+        <link rel="icon" href="{{url_for('static', filename='favicon.jpg')}}" type="image/x-icon" class="favicon">
+    </head>
+    <body>
+
+        <a href="{{url_for('index')}}">
+            <img src="{{url_for('static', filename='logo.jpg')}}" class="page_logo">
+        </a>
+        <h1 id="status_bar">Kart Driving Preset Selection</h1>
+        <div class="container">
+            <button class="preset_but_1" onclick=prst_1() id="p_1">Preset 1</button>
+            <button class="preset_but_2" onclick=prst_2() id="p_2">Preset 2</button>
+            <button class="preset_but_3" onclick=prst_3() id="p_3">Preset 3</button>
+            <button class="preset_but_4" onclick=prst_4() id="p_4">Preset 4</button>
+            <button class="preset_but_5" onclick=prst_5() id="p_5">Preset 5</button>
+        </div>
+
+        <script>
+            fetch("{{url_for('preset_names')}}").then(res => res.json()).then(data => {
+                document.getElementById("p_1").innerText = data.preset_1.visible_name
+                document.getElementById("p_2").innerText = data.preset_2.visible_name
+                document.getElementById("p_3").innerText = data.preset_3.visible_name
+                document.getElementById("p_4").innerText = data.preset_4.visible_name
+                document.getElementById("p_5").innerText = data.preset_5.visible_name
+            })
+        </script>
+
+        <script src="{{url_for('static', filename='script.js')}}"></script>
+    </body>
+    <footer>
+        To edit presets refer to IT - © 2026 Wheelchair Karting
+    </footer>
+</html>

@@ -35,27 +35,85 @@ body {
 }
 
 /* bottone 1 */
-        .start_button {
-            background-color: yellow;
-            color: black;
-        }
+.start_button {
+    background-color: yellow;
+    color: black;
+}
 
-        .start_button:hover {
-            background-color: lightgreen;
-            color: black;
-        }
+/* bottone 2 */
+.stop_button {
+    background-color: yellow;
+    color: black;
+}
 
-        /* bottone 2 */
-        .stop_button {
-            background-color: yellow;
-            color: black;
-        }
+.quit_button {
+    background-color: yellow;
+    color: black;
+}
 
-        .stop_button:hover {
-            background-color: red;
-        }
+.edit_button {
+    background-color: yellow;
+    color: black;
+}
 
-        .page_logo {
-            height: 150px;
-            width: auto;
-        }
+.edit_button:hover {
+    background-color: #95b1af;
+    color: black;
+}
+
+.quit_button:hover {
+    background-color: #bc5b3f;
+}
+
+.stop_button:hover {
+    background-color: red;
+}
+
+.start_button:hover {
+    background-color: #aaea0e;
+    color: black;
+}
+
+.page_logo {
+    height: 150px;
+    width: auto;
+}
+
+.preset_but_1:hover {
+    color: black;
+    background-color: yellow;
+}
+.preset_but_2:hover {
+    color: black;
+    background-color: yellow;
+}
+.preset_but_3:hover {
+    background-color: yellow;
+}
+.preset_but_4:hover {
+    background-color: yellow;
+}
+.preset_but_5:hover {
+    background-color: yellow;
+}
+
+.preset_but_1 {
+    background-color: #031926;
+    color: #F4E9CD;
+}
+.preset_but_2 {
+    background-color: #468189;
+    color: #F4E9CD;
+}
+.preset_but_3 {
+    background-color: #77ACA2;
+    color: black;
+}
+.preset_but_4 {
+    background-color: #9DBEBB;
+    color: black;
+}
+.preset_but_5 {
+    background-color: #F4E9CD;
+    color: black;
+}

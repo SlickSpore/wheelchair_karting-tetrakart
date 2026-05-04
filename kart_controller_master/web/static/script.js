@@ -35,5 +35,30 @@ function stop() {
 function shutdown() {
     bar.textContent = "Shutting Down!";
     fetch('/core_shutdown',  {method:'POST'})
-    statusLoop();
+}
+
+function edit() {
+    bar.textContent = "Shutting Down!";
+    fetch('/core_shutdown',  {method:'POST'})
+}
+
+function prst_1(){
+    bar.textContent = "Selected Preset 1, Reload System to Apply Changes"
+    fetch('/preset_1')
+}
+function prst_2(){
+    bar.textContent = "Selected Preset 2, Reload System to Apply Changes"
+    fetch('/preset_2')
+}
+function prst_3(){
+    bar.textContent = "Selected Preset 3, Reload System to Apply Changes"
+    fetch('/preset_2')
+}
+function prst_4(){
+    bar.textContent = "Selected Preset 4, Reload System to Apply Changes"
+    fetch('/preset_2')
+}
+function prst_5(){
+    bar.textContent = "Selected Preset 5, Reload System to Apply Changes"
+    fetch('/preset_2')
 }

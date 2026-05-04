@@ -1,4 +1,5 @@
 import json, argparse, os
+from enum import Enum
 
 
 global_variables = {}
@@ -20,8 +21,13 @@ parser.add_argument("--motor_maxangle")
 parser.add_argument("--js_threshold")
 parser.add_argument("--js_axes")
 parser.add_argument("--js_dtzn")
+parser.add_argument("--core_mode")
 
 args = parser.parse_args()
+
+class CoreModes(Enum):
+    JOYSTICK = "joystick"
+    HEADSET = "headset"
 
 class Kart_Settings():
     def __init__(self):
@@ -40,6 +46,7 @@ class Kart_Settings():
         self.JS_AXES = settings_json["js_axes"]      
         self.JS_DTZN = settings_json["js_dtzn"]      
         self.VERBOSE = settings_json["verbose"] 
+        self.CORE_MODE = CoreModes.HEADSET if settings_json["core_mode"].lower() == CoreModes.HEADSET.value else CoreModes.JOYSTICK
 
 
 def generate_defaults():
@@ -62,6 +69,7 @@ def generate_defaults():
     global_variables["js_dtzn"]         = 10
     global_variables["verbose"]         = False
     global_variables["motor_maxangle"]  = 120
+    global_variables["core_mode"]       = "joystick"
 
     save_changes()
     exit(0)

@@ -1,3 +1,5 @@
+# Access Point Start Routine © 2026 Wheelchair Karting
+
 DEVICE="wlan0"
 
 SSID="DeltaKart105"
